@@ -27,5 +27,5 @@ jobs:
         uses: actions/upload-artifact@v4.6.2
         with:
           name: firmware
-          path: esp32_led_blink.ino
+          path: ./build/esp32_led_blink.ino.bin
 
