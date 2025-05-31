@@ -1,4 +1,4 @@
-name: Build Firmware A.4.6.2
+name: Build Firmware v4
 
 on:
   push:
@@ -29,10 +29,3 @@ jobs:
           name: firmware
           path: esp32_led_blink.bin
 
-          Available Options:
-  warn: Output a warning but do not fail the action
-  error: Fail the action with an error message
-  ignore: Do not output any warnings or errors, the action does not fail
-
-
-         
