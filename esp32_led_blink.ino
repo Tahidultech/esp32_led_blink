@@ -1,36 +1,63 @@
-/*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
+#include <BluetoothSerial.h>
 
-  Most Arduinos have an on-board LED you can control. On the UNO, MEGA and ZERO 
-  it is attached to digital pin 13, on MKR1000 on pin 6. LED_BUILTIN is set to
-  the correct LED pin independent of which board is used.
-  If you want to know what pin the on-board LED is connected to on your Arduino model, check
-  the Technical Specs of your board  at https://www.arduino.cc/en/Main/Products
-  
-  This example code is in the public domain.
+BluetoothSerial SerialBT;
 
-  modified 8 May 2014
-  by Scott Fitzgerald
-  
-  modified 2 Sep 2016
-  by Arturo Guadalupi
-  
-  modified 8 Sep 2016
-  by Colby Newman
-*/
+const int relayPin1 = 4;
+const int relayPin2 = 5;
+const int relayPin3 = 6;
+const int relayPin4 = 7;
 
-
-// the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(115200);
+  SerialBT.begin("ESP32_BT"); // Bluetooth device name
+
+  pinMode(relayPin1, OUTPUT);
+  pinMode(relayPin2, OUTPUT);
+  pinMode(relayPin3, OUTPUT);
+  pinMode(relayPin4, OUTPUT);
+
+  // Ensure that the relays are initially in the OFF state
+  digitalWrite(relayPin1, LOW);
+  digitalWrite(relayPin2, LOW);
+  digitalWrite(relayPin3, LOW);
+  digitalWrite(relayPin4, LOW);
 }
 
-// the loop function runs over and over again forever
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
+  if (SerialBT.available()) {
+    char command = SerialBT.read();
+    executeCommand(command);
+  }
+}
+
+void executeCommand(char command) {
+  switch (command) {
+    case '1':
+      digitalWrite(relayPin1, !digitalRead(relayPin1));
+      break;
+    case '2':
+      digitalWrite(relayPin2, !digitalRead(relayPin2));
+      break;
+    case '3':
+      digitalWrite(relayPin3, !digitalRead(relayPin3));
+      break;
+    case '4':
+      digitalWrite(relayPin4, !digitalRead(relayPin4));
+      break;
+    // To turn off the relays, use '5', '6', '7', and '8'
+    case '5':
+      digitalWrite(relayPin1, LOW);
+      break;
+    case '6':
+      digitalWrite(relayPin2, LOW);
+      break;
+    case '7':
+      digitalWrite(relayPin3, LOW);
+      break;
+    case '8':
+      digitalWrite(relayPin4, LOW);
+      break;
+    default:
+      break;
+  }
 }
